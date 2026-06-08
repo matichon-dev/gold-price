@@ -14,7 +14,7 @@ class Base(DeclarativeBase):
 class GoldPrice(Base):
     __tablename__ = "gold_prices"
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    id: Mapped[int] = mapped_column(BigInteger().with_variant(Integer, "sqlite"), primary_key=True)
     scraped_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
     gold_bar_buy: Mapped[float] = mapped_column(Numeric(10, 2), nullable=False)
     gold_bar_sell: Mapped[float] = mapped_column(Numeric(10, 2), nullable=False)
