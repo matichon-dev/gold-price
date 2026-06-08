@@ -56,14 +56,12 @@ def cmd_latest():
     """แสดงราคาล่าสุดจาก DB"""
     with Session(ENGINE) as session:
         record = get_latest(session)
-
-    if record is None:
-        print("ยังไม่มีข้อมูลในฐานข้อมูล")
-        return
-
-    print(f"ราคาทองล่าสุด ({record.scraped_at.strftime('%Y-%m-%d %H:%M:%S')})")
-    print(f"  ทองแท่ง    ซื้อ: {record.gold_bar_buy:,.2f}  ขาย: {record.gold_bar_sell:,.2f}")
-    print(f"  ทองรูปพรรณ ซื้อ: {record.gold_ornament_buy:,.2f}  ขาย: {record.gold_ornament_sell:,.2f}")
+        if record is None:
+            print("ยังไม่มีข้อมูลในฐานข้อมูล")
+            return
+        print(f"ราคาทองล่าสุด ({record.scraped_at.strftime('%Y-%m-%d %H:%M:%S')})")
+        print(f"  ทองแท่ง    ซื้อ: {record.gold_bar_buy:,.2f}  ขาย: {record.gold_bar_sell:,.2f}")
+        print(f"  ทองรูปพรรณ ซื้อ: {record.gold_ornament_buy:,.2f}  ขาย: {record.gold_ornament_sell:,.2f}")
 
 
 def cmd_history(hours: int = 24):

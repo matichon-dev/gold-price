@@ -4,7 +4,7 @@ from typing import Optional
 from sqlalchemy import BigInteger, DateTime, Integer, Numeric, String, create_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column
 
-SOURCE_URL = "https://classic.goldtraders.or.th/default.aspx"
+from scraper import URL as SOURCE_URL
 
 
 class Base(DeclarativeBase):
