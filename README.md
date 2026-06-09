@@ -118,6 +118,70 @@ Header: X-API-Key: <your_api_key>
 
 ดู interactive docs ได้ที่ `http://your-server:8000/docs`
 
+### รัน API แบบ Background
+
+**วิธีที่ 1: nohup (ง่ายสุด)**
+
+```bash
+nohup venv/bin/uvicorn api:app --host 0.0.0.0 --port 8000 >> /var/log/gold-api.log 2>&1 &
+
+# ดู process
+ps aux | grep uvicorn
+
+# หยุด
+kill <PID>
+```
+
+**วิธีที่ 2: PM2 (แนะนำ — ต้องมี Node.js)**
+
+```bash
+# ติดตั้ง PM2
+npm install -g pm2
+
+# รัน
+pm2 start venv/bin/uvicorn --name gold-api -- api:app --host 0.0.0.0 --port 8000
+
+# ดู status / logs
+pm2 status
+pm2 logs gold-api
+
+# หยุด / รีสตาร์ท
+pm2 stop gold-api
+pm2 restart gold-api
+
+# auto-start เมื่อ server reboot
+pm2 startup
+pm2 save
+```
+
+**วิธีที่ 3: systemd (Production)**
+
+สร้างไฟล์ `/etc/systemd/system/gold-api.service`:
+
+```ini
+[Unit]
+Description=Gold Price API
+After=network.target
+
+[Service]
+User=root
+WorkingDirectory=/data/gold-price
+ExecStart=/data/gold-price/venv/bin/uvicorn api:app --host 0.0.0.0 --port 8000
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+```
+
+```bash
+systemctl daemon-reload
+systemctl enable gold-api
+systemctl start gold-api
+
+# ดู status
+systemctl status gold-api
+```
+
 ## โครงสร้างโปรเจค
 
 ```
