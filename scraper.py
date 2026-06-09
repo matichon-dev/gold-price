@@ -40,7 +40,7 @@ def parse_gold_prices(html: str) -> dict | None:
 
                 if orn_idx is not None:
                     orn_sell = _find_price_after_label(texts, orn_idx, len(texts), ["ขายออก", "ขาย"])
-                    orn_buy = _find_price_after_label(texts, orn_idx, len(texts), ["รับซื้อ", "ซื้อ"])
+                    orn_buy = _find_price_after_label(texts, orn_idx, len(texts), ["รับซื้อ", "ซื้อ", "ฐานภาษี"])
                     if orn_sell is not None:
                         prices["gold_ornament_sell"] = orn_sell
                     if orn_buy is not None:
@@ -48,7 +48,7 @@ def parse_gold_prices(html: str) -> dict | None:
 
             elif orn_idx is not None:
                 sell = _find_price_after_label(texts, orn_idx, len(texts), ["ขายออก", "ขาย"])
-                buy = _find_price_after_label(texts, orn_idx, len(texts), ["รับซื้อ", "ซื้อ"])
+                buy = _find_price_after_label(texts, orn_idx, len(texts), ["รับซื้อ", "ซื้อ", "ฐานภาษี"])
                 if sell is not None:
                     prices["gold_ornament_sell"] = sell
                 if buy is not None:
