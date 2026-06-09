@@ -37,7 +37,7 @@ def init_db(database_url: str) -> None:
 
 def save_price(session: Session, data: dict) -> GoldPrice:
     price = GoldPrice(
-        scraped_at=datetime.now(TZ_BANGKOK),
+        scraped_at=datetime.now(TZ_BANGKOK).replace(tzinfo=None),
         gold_bar_buy=data["gold_bar_buy"],
         gold_bar_sell=data["gold_bar_sell"],
         gold_ornament_buy=data["gold_ornament_buy"],
@@ -54,7 +54,7 @@ def get_latest(session: Session) -> Optional[GoldPrice]:
 
 
 def get_history(session: Session, hours: int = 24) -> list[GoldPrice]:
-    since = datetime.now(TZ_BANGKOK) - timedelta(hours=hours)
+    since = datetime.now(TZ_BANGKOK).replace(tzinfo=None) - timedelta(hours=hours)
     return (
         session.query(GoldPrice)
         .filter(GoldPrice.scraped_at >= since)
