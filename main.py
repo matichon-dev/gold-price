@@ -32,6 +32,19 @@ def cmd_init_db():
     logger.info("Database initialized — table 'gold_prices' ready")
 
 
+def _is_same_as_latest(session: Session, data: dict) -> bool:
+    """เปรียบเทียบราคาที่ดึงมากับ record ล่าสุดใน DB — คืน True ถ้าเหมือนกัน"""
+    latest = get_latest(session)
+    if latest is None:
+        return False
+    return (
+        float(latest.gold_bar_buy) == data["gold_bar_buy"]
+        and float(latest.gold_bar_sell) == data["gold_bar_sell"]
+        and float(latest.gold_ornament_buy) == data["gold_ornament_buy"]
+        and float(latest.gold_ornament_sell) == data["gold_ornament_sell"]
+    )
+
+
 def cmd_scrape():
     """ดึงราคาทองและบันทึกลง DB"""
     logger.info("Starting scrape...")
@@ -41,7 +54,10 @@ def cmd_scrape():
         sys.exit(1)
 
     with Session(ENGINE) as session:
-        record = save_price(session, data)
+        if _is_same_as_latest(session, data):
+            logger.info("ราคาไม่มีการเปลี่ยนแปลง — ข้ามการบันทึก")
+            return
+        save_price(session, data)
 
     logger.info(
         "Saved — bar buy=%.2f sell=%.2f | ornament buy=%.2f sell=%.2f",
